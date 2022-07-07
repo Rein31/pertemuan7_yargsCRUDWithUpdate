@@ -11,8 +11,6 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-let nama;
-
 
 rl.question("What is your name? ", (name) => {
     emailInput(name);
@@ -39,7 +37,6 @@ function phoneNumberInput(name, email) {
             rl.close();
         }
     })
-   
 }
 
 // validator email
