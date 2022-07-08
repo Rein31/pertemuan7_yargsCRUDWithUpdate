@@ -64,28 +64,13 @@ function dataPathValidator(dataPath){
     }
 }
 
-const main = async() =>{
-  const name = await questionsName('What is your name? ');
-  const mobile = await questionsPhone('your mobile number? ');
-  const email = await questionsEmail('your email? ');
-
-  const contact = {name,mobile,email};
-
-  const dirPath = './data';
-  dirPathValidator(dirPath);
-
-  const dataPath = './data/contacts.json';
-  dataPathValidator(dataPath);
-
-  // save array to file JSON
+// save file contact to JSON
+const saveFileContact = (contact) =>{
   const file = fs.readFileSync('data/contacts.json','utf8');
   const contacts = JSON.parse(file);
   contacts.push(contact);
   fs.writeFileSync('data/contacts.json',JSON.stringify(contacts));
 
-  console.log(`Thank you ${name}, your email is ${email}, and your phone number is ${mobile}`);
-
-  rl.close()
 }
 
-module.exports = {main};
+module.exports = {questionsName,questionsPhone,questionsEmail,dirPathValidator,dataPathValidator,saveFileContact,rl};
