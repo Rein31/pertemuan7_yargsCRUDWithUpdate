@@ -1,24 +1,41 @@
-// main
-const main = async() =>{
-  const apps = require('./contact.js');
+// import yargs
+const yargs = require("yargs");
 
-  const name = await apps.questionsName('What is your name? ');
-  const mobile = await apps.questionsPhone('your mobile number? ');
-  const email = await apps.questionsEmail('your email? ');
+ // import app
+ const apps = require('./contact.js');
 
-  const contact = {name,mobile,email};
+// console.log(yargs.argv);
+yargs.command({
+  command :'add',
+  describe :'add new contact',
+  builder : {
+    name : {
+      describe : 'Contact Name',
+      demandOption : true,
+      type : 'string',
+    },
+    email : {
+      describe : 'Contact Email',
+      demandOption : false,
+      type : 'string',
+    },
+    mobile : {
+      describe : 'Contact mobile phone number',
+      demandOption : true,
+      type : 'string',
+    },
+  },
+  handler(argv){
+    // const contact = {
+    //   name : argv.name,
+    //   email : argv.email,
+    //   mobile : argv.mobile,
+    // };
+    // console.log(contact);
 
-  const dirPath = './data';
-  apps.dirPathValidator(dirPath);
+    apps.saveFileContactPar(argv.name,argv.mobile,argv.email);
+     
+  },
+});
 
-  const dataPath = './data/contacts.json';
-  apps.dataPathValidator(dataPath);
-
-  apps.saveFileContact(contact);
-  
-  console.log(`Thank you ${name}, your email is ${email}, and your phone number is ${mobile}`);
-
-  apps.rl.close()
-}
-
-main();
+yargs.parse();
