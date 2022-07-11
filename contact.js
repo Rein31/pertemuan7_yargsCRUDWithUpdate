@@ -94,6 +94,7 @@ function validateEmail(email){
   }
 }
 
+// function for validate mobile phone number
 function validateMobile(mobile){
   if (!validator.isMobilePhone(mobile, "id-ID")) {
     return true;
