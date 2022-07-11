@@ -1,1 +1,2 @@
 # pertemuan5_assignmentContact
+# pertemuan6_checkDuplicate
