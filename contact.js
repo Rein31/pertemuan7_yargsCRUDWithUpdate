@@ -87,11 +87,12 @@ const checkDuplicate = (name) => {
   }
 }
 
+// save file contact with parameter and check duplicate
 const saveFileContactPar = (name,mobile,email) =>{
   const contact = {name,mobile,email};
   const file = fs.readFileSync('data/contacts.json','utf8');
   const contacts = JSON.parse(file);
-  
+
   // check duplicate data JSON
   if (checkDuplicate(name)) {
     console.log("name is already exist");
