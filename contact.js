@@ -9,55 +9,41 @@ const readline = require("readline");
 const validator = require("validator");
 
 // question name
-const questionsName = (ask) => {
-  return new Promise((resolve,reject) =>{
-    rl.question(ask, (answer) => {
-      resolve(answer);
-    })
-  })
-}
+// const questionsName = (ask) => {
+//   return new Promise((resolve,reject) =>{
+//     rl.question(ask, (answer) => {
+//       resolve(answer);
+//     })
+//   })
+// }
 
 // question and validate phone number
-const questionsPhone = (ask) => {
-  return new Promise((resolve,reject) => {
-    rl.question(ask, (pnumber) => {
-      if (!validator.isMobilePhone(pnumber, "id-ID")) {
-        console.log('phone number not valid!');
-        resolve(questionsPhone(ask));
-      }else{
-        resolve(pnumber);
-      }
-    })
-  })
-}
+// const questionsPhone = (ask) => {
+//   return new Promise((resolve,reject) => {
+//     rl.question(ask, (pnumber) => {
+//       if (!validator.isMobilePhone(pnumber, "id-ID")) {
+//         console.log('phone number not valid!');
+//         resolve(questionsPhone(ask));
+//       }else{
+//         resolve(pnumber);
+//       }
+//     })
+//   })
+// }
 
 // question and validate email
-const questionsEmail = (ask) => {
-  return new Promise((resolve,reject) => {
-    rl.question(ask, (email) => {
-      if (!validator.isEmail(email)) {
-        console.log('email not valid!');
-        resolve(questionsEmail(ask));
-      }else{
-        resolve(email);
-      }
-    })
-  })
-}
-
-// validate dir folder path
-function dirPathValidator(dirPath){
-    if (!fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath);
-    }
-}
-
-// validate dir data path
-function dataPathValidator(dataPath){
-    if (!fs.existsSync(dataPath)) {
-        fs.writeFileSync(dataPath,'[]','utf-8');
-    }
-}
+// const questionsEmail = (ask) => {
+//   return new Promise((resolve,reject) => {
+//     rl.question(ask, (email) => {
+//       if (!validator.isEmail(email)) {
+//         console.log('email not valid!');
+//         resolve(questionsEmail(ask));
+//       }else{
+//         resolve(email);
+//       }
+//     })
+//   })
+// }
 
 // save file contact to JSON
 const saveFileContact = (contact) =>{
@@ -87,6 +73,33 @@ const checkDuplicate = (name) => {
   }
 }
 
+// validate dir folder path
+function dirPathValidator(dirPath){
+  if (!fs.existsSync(dirPath)) {
+      fs.mkdirSync(dirPath);
+  }
+}
+
+// validate dir data path
+function dataPathValidator(dataPath){
+  if (!fs.existsSync(dataPath)) {
+      fs.writeFileSync(dataPath,'[]','utf-8');
+  }
+}
+
+// function for validate email
+function validateEmail(email){
+  if (!validator.isEmail(email)) {
+    return true;
+  }
+}
+
+function validateMobile(mobile){
+  if (!validator.isMobilePhone(mobile, "id-ID")) {
+    return true;
+  }
+}
+
 // save file contact with parameter and check duplicate
 const saveFileContactPar = (name,mobile,email) =>{
   const contact = {name,mobile,email};
@@ -96,6 +109,10 @@ const saveFileContactPar = (name,mobile,email) =>{
   // check duplicate data JSON
   if (checkDuplicate(name)) {
     console.log("name is already exist");
+  }else if (validateEmail(email)) {
+    console.log("email not valid!");
+  }else if (validateMobile(mobile)) {
+    console.log("mobile phone number not valid!");
   }else{
     contacts.push(contact);
     fs.writeFileSync('data/contacts.json',JSON.stringify(contacts));
@@ -106,4 +123,4 @@ const saveFileContactPar = (name,mobile,email) =>{
 
 
 
-module.exports = {questionsName,questionsPhone,questionsEmail,dirPathValidator,dataPathValidator,saveFileContact,saveFileContactPar};
+module.exports = {dirPathValidator,dataPathValidator,saveFileContact,saveFileContactPar};
