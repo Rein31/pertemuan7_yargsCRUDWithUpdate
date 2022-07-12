@@ -113,7 +113,9 @@ const detailContact = (name) => {
   const contacts = loadContact();
   const findName = contacts.find((contact) => contact.name === name);
   if (findName) {
-    
+    console.log(findName.name);
+    console.log(findName.mobile);
+    console.log(findName.email);
   }else{
     console.log("contact name not exist!");
   }
@@ -122,8 +124,9 @@ const detailContact = (name) => {
 // delete contact
 const deleteContact = (name) => {
   const contacts = loadContact();
-  const remainingData = contacts.filter((contact) => contact.name != name);
-  if (remainingData) {
+  const findName = contacts.find((contact) => contact.name === name);
+  if (findName) {
+    const remainingData = contacts.filter((contact) => contact.name != name);
     console.log("delete success");
     // console.log(remainingData);
     overWriteFileContact(remainingData)
