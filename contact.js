@@ -142,9 +142,10 @@ const deleteContact = (name) => {
 const updateContact = (oldName,newName,mobile,email) => {
   const contacts = loadContact();
   const findName = contacts.find((contact) => contact.name.toLowerCase() === oldName.toLowerCase());
-  const oldMobile = findName.mobile;
-  const oldEmail = findName.email;
+  
   if (findName) {
+    const oldMobile = findName.mobile;
+    const oldEmail = findName.email;
     if (newName == '' || newName === undefined || newName === null){
       findName.name = oldName;
     }else if (checkDuplicate(newName)){
@@ -160,6 +161,8 @@ const updateContact = (oldName,newName,mobile,email) => {
       if (validateMobile(mobile)) {
         console.log("mobile phone number not valid!");
         return false;
+      }else{
+        findName.mobile = mobile;
       }
     }
 
@@ -169,6 +172,8 @@ const updateContact = (oldName,newName,mobile,email) => {
       if (validateEmail(email)) {
         console.log("email not valid!");
         return false;
+      }else{
+        findName.email = email;
       }
     }
 
@@ -214,7 +219,6 @@ const saveFileContactPar = (name,mobile,email) =>{
 
   if (email =='' || email === undefined || email === null) {
     contact = {name,mobile};
-    
   }else {
     if (validateEmail(email)) {
       console.log("email not valid!");
