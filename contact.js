@@ -45,19 +45,9 @@ const validator = require("validator");
 //   })
 // }
 
-// save file contact to JSON
-const saveFileContact = (contact) =>{
-  const file = fs.readFileSync('data/contacts.json','utf8');
-  const contacts = JSON.parse(file);
-  contacts.push(contact);
-  fs.writeFileSync('data/contacts.json',JSON.stringify(contacts));
-
-}
-
 // check duplicate data JSON
 const checkDuplicate = (name) => {
-  const file = fs.readFileSync('data/contacts.json','utf8');
-  const contacts = JSON.parse(file);
+  const contacts = loadContact();
   let count = 0;
   contacts.forEach(element => {
     if (name == element.name) {
@@ -101,11 +91,70 @@ function validateMobile(mobile){
   }
 }
 
+// load contact
+const loadContact = () => {
+  const file = fs.readFileSync('data/contacts.json','utf8');
+  const contacts = JSON.parse(file);
+  return contacts;
+}
+
+// Create list contact
+const listContact = () => {
+  const contacts = loadContact();
+  console.log('Contact List : ');
+  contacts.forEach((contact,i) => {
+    console.log(`${i+1}.${contact.name} - ${contact.mobile}`);
+  });
+}
+
+// detail contact
+const detailContact = (name) => {
+  
+  const contacts = loadContact();
+  const findName = contacts.find((contact) => contact.name === name);
+  if (findName) {
+    
+  }else{
+    console.log("contact name not exist!");
+  }
+}
+
+// delete contact
+const deleteContact = (name) => {
+  const contacts = loadContact();
+  const remainingData = contacts.filter((contact) => contact.name != name);
+  if (remainingData) {
+    console.log("delete success");
+    // console.log(remainingData);
+    overWriteFileContact(remainingData)
+  }else{
+    console.log("contact name not exist!");
+  }
+}
+
+// overwrite save file contact to JSON
+const overWriteFileContact = (contact) =>{
+  const dirPath = "./data";
+  const dataPath = "./data/contacts.json";
+  dirPathValidator(dirPath);
+  dataPathValidator(dataPath);
+  const contacts = contact;
+  fs.writeFileSync('data/contacts.json',JSON.stringify(contacts));
+
+}
+
 // save file contact with parameter and check duplicate
 const saveFileContactPar = (name,mobile,email) =>{
   const contact = {name,mobile,email};
-  const file = fs.readFileSync('data/contacts.json','utf8');
-  const contacts = JSON.parse(file);
+  // const file = fs.readFileSync('data/contacts.json','utf8');
+  // const contacts = JSON.parse(file);
+  const dirPath = "./data";
+  const dataPath = "./data/contacts.json";
+  dirPathValidator(dirPath);
+  dataPathValidator(dataPath);
+
+  // load contactss
+  const contacts = loadContact();
 
   // check duplicate data JSON
   if (checkDuplicate(name)) {
@@ -124,4 +173,4 @@ const saveFileContactPar = (name,mobile,email) =>{
 
 
 
-module.exports = {dirPathValidator,dataPathValidator,saveFileContact,saveFileContactPar};
+module.exports = {deleteContact,detailContact,dirPathValidator,dataPathValidator,saveFileContactPar,listContact};
