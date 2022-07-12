@@ -111,27 +111,74 @@ const listContact = () => {
 const detailContact = (name) => {
   
   const contacts = loadContact();
-  const findName = contacts.find((contact) => contact.name === name);
+  const findName = contacts.find((contact) => contact.name.toLowerCase() === name.toLowerCase());
   if (findName) {
     console.log(findName.name);
     console.log(findName.mobile);
-    console.log(findName.email);
+    if (findName.email) {
+      console.log(findName.email);  
+    }
+    
   }else{
-    console.log("contact name not exist!");
+    console.log(`contact ${name} not exist!`);
   }
 }
 
 // delete contact
 const deleteContact = (name) => {
   const contacts = loadContact();
-  const findName = contacts.find((contact) => contact.name === name);
+  const findName = contacts.find((contact) => contact.name.toLowerCase() === name.toLowerCase());
   if (findName) {
-    const remainingData = contacts.filter((contact) => contact.name != name);
-    console.log("delete success");
+    const remainingData = contacts.filter((contact) => contact.name.toLowerCase() !== name.toLowerCase());
+    console.log(`${name} delete success`);
     // console.log(remainingData);
     overWriteFileContact(remainingData)
   }else{
-    console.log("contact name not exist!");
+    console.log(`contact ${name} not exist!`);
+  }
+}
+
+// update contact
+const updateContact = (oldName,newName,mobile,email) => {
+  const contacts = loadContact();
+  const findName = contacts.find((contact) => contact.name.toLowerCase() === oldName.toLowerCase());
+  const oldMobile = findName.mobile;
+  const oldEmail = findName.email;
+  if (findName) {
+    if (newName == '' || newName === undefined || newName === null){
+      findName.name = oldName;
+    }else if (checkDuplicate(newName)){
+      console.log(`${newName} already exist!`);
+      return false;
+    }else{
+      findName.name = newName;
+    }
+
+    if (mobile == '' || mobile === undefined || mobile === null ){
+      findName.mobile = oldMobile;
+    }else{
+      if (validateMobile(mobile)) {
+        console.log("mobile phone number not valid!");
+        return false;
+      }
+    }
+
+    if (email =='' || email === undefined || email === null){
+      findName.email = oldEmail;
+    }else{
+      if (validateEmail(email)) {
+        console.log("email not valid!");
+        return false;
+      }
+    }
+
+    // console.log(contacts);
+    // console.log(findName);
+    // const updateContacts={findName}
+    overWriteFileContact(contacts);
+    console.log(`${oldName} update success`);
+  }else{
+    console.log(`contact ${oldName} not exist!`);
   }
 }
 
@@ -148,7 +195,7 @@ const overWriteFileContact = (contact) =>{
 
 // save file contact with parameter and check duplicate
 const saveFileContactPar = (name,mobile,email) =>{
-  const contact = {name,mobile,email};
+  let contact = {name,mobile,email};
   // const file = fs.readFileSync('data/contacts.json','utf8');
   // const contacts = JSON.parse(file);
   const dirPath = "./data";
@@ -162,18 +209,32 @@ const saveFileContactPar = (name,mobile,email) =>{
   // check duplicate data JSON
   if (checkDuplicate(name)) {
     console.log("name is already exist");
-  }else if (validateEmail(email)) {
-    console.log("email not valid!");
-  }else if (validateMobile(mobile)) {
-    console.log("mobile phone number not valid!");
-  }else{
-    contacts.push(contact);
-    fs.writeFileSync('data/contacts.json',JSON.stringify(contacts));
-    console.log("Terima kasih, data anda sudah tersimpan");   
-  // rl.close();
+    return false;
   }
+
+  if (email =='' || email === undefined || email === null) {
+    contact = {name,mobile};
+    
+  }else {
+    if (validateEmail(email)) {
+      console.log("email not valid!");
+      return false;
+    }
+  }
+  
+  
+  if (validateMobile(mobile)) {
+    console.log("mobile phone number not valid!");
+    return false;
+  }
+
+  contacts.push(contact);
+  fs.writeFileSync('data/contacts.json',JSON.stringify(contacts));
+  console.log("Terima kasih, data anda sudah tersimpan");   
+  // rl.close();
+  
 }
 
 
 
-module.exports = {deleteContact,detailContact,dirPathValidator,dataPathValidator,saveFileContactPar,listContact};
+module.exports = {deleteContact,detailContact,updateContact,saveFileContactPar,listContact};
